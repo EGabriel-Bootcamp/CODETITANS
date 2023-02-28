@@ -42,7 +42,7 @@ namespace CodeTitansBank
 
 		public static void Login()
 		{
-			string path = @"C:\codeTitansBank\db.txt";
+			string path = @"C:\Users\LENOVO\Documents\db.txt";
 
 			string username;
 			string password;
@@ -74,13 +74,16 @@ namespace CodeTitansBank
 			{
 				int trackIndex;
 				username = GetInfo.GetUsername();
-				for (int i = 0; i < usernames.Count - 1; i++)
+				password = GetInfo.GetPassword();
+
+				
+				for (int i = 0; i < usernames.Count; i++)
 				{
-					if (usernames[i] == username)
+					if (usernames[i] == username && passwords[i] == password)
 					{
 						trackIndex = i;
 						int trials = 1;
-						password = GetInfo.GetPassword();
+						//password = GetInfo.GetPassword();
 						while (passwords[i] != password)
 						{
 							if (trials >= 3)
