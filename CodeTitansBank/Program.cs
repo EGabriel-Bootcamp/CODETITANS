@@ -6,6 +6,7 @@ string path = @"C:\codeTitansBank\db.txt";
 Helper.Welcome();
 
 int answer;
+Bank account;
 
 do
 {
@@ -16,7 +17,8 @@ do
 	}
 	else if (answer == 1)
 	{
-		SignUpLogin.SignUp(path);
+		account = SignUpLogin.SignUp(path);
+		Helper.WhatToDoLogged(account);
 	}
 	else
 	{

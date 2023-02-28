@@ -15,7 +15,7 @@ namespace CodeTitansBank
 
 		//Account Properties;
 		public string AccountNumber { get; set; }
-		public decimal Balance { get; } 
+		public decimal Balance { get; private set; } 
 
 		public string UserName { get; set; }
 		public string Email { get; set; }
@@ -28,6 +28,7 @@ namespace CodeTitansBank
 			//Populating the account number
 			this.AccountNumber = defaultNumber.ToString();
 			defaultNumber++;
+
 			this.Balance = balance;
 
 			//populating user info;
@@ -37,14 +38,30 @@ namespace CodeTitansBank
 			this.PhoneNumber = phoneNo;
 		}
 
-		private void Deposit()
+		public decimal Deposit(decimal amount)
 		{
+			Balance += amount;
 
+			return Balance;
 		}
 
-		private void Withdraw()
+		public decimal Withdraw(decimal amount)
 		{
+			if (Balance >= amount)
+			{
+				Balance -= amount;
+			}
+			else
+			{
+				Helper.ErrorWithdraw(this);
+			}
 
+			return Balance;
 		}
+		public decimal CheckBalance()
+		{
+			return Balance;
+		}
+
 	}
 }

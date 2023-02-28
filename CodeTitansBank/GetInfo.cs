@@ -51,10 +51,35 @@ namespace CodeTitansBank
 			return password;
 		}
 
+
+		internal static int GetAge()
+		{
+			string age;
+			bool isDigit, keepGoing = true;
+
+			Console.WriteLine("Please Enter your Age");
+			age = Console.ReadLine();
+
+			isDigit = int.TryParse(age, out int ageInt);
+
+			while (!isDigit)
+			{
+				Console.WriteLine("Please enter a valid age");
+				age = Console.ReadLine();
+				isDigit = int.TryParse(age, out ageInt);
+			}
+
+
+
+			return ageInt;
+
+		}
+
+
 		internal static string GetPhoneNo()
 		{
 			string phoneNo;
-			bool isDigit;
+			bool isDigit, keepGoing = true;
 
 			Console.WriteLine("Please Enter your phone number");
 
@@ -62,15 +87,25 @@ namespace CodeTitansBank
 			{
 				phoneNo = Console.ReadLine();
 				isDigit = int.TryParse(phoneNo, out int phone);
-				if (isDigit == false)
+				if (isDigit)
+				{
+					if (phoneNo.Length < 6)
+					{
+						Console.WriteLine("Phone number must not be less than 6 characters");
+					}
+					else
+					{
+						phoneNo = phone.ToString();
+						keepGoing = false;
+					}
+				}
+				else
 				{
 					Console.WriteLine("Please enter a valid number");
 				}
-
-			} while (isDigit == false);
+			} while (keepGoing);
 
 			return phoneNo;
-
 		}
 
 		internal static string GetUsername()
@@ -99,6 +134,36 @@ namespace CodeTitansBank
 			} while (!valid);
 
 			return username;
+		}
+
+		internal static decimal GetDepositAmount()
+		{
+			Console.WriteLine("How much would you like to deposit?");
+			string amount = Console.ReadLine();
+			bool isDigit = decimal.TryParse(amount, out decimal amountDecimal);
+
+			while (!isDigit)
+			{
+				Console.WriteLine("Please enter a valid amount");
+				amount = Console.ReadLine();
+				isDigit = decimal.TryParse(amount, out amountDecimal);
+			}
+			return amountDecimal;
+		}
+
+		internal static decimal GetWithdrawalAmount()
+		{
+			Console.WriteLine("How much would you like to withdraw?");
+			string amount = Console.ReadLine();
+			bool isDigit = decimal.TryParse(amount, out decimal amountDecimal);
+
+			while (!isDigit)
+			{
+				Console.WriteLine("Please enter a valid amount");
+				amount = Console.ReadLine();
+				isDigit = decimal.TryParse(amount, out amountDecimal);
+			}
+			return amountDecimal;
 		}
 	}
 }
