@@ -42,7 +42,7 @@ namespace CodeTitansBank
 
 		public static void Login()
 		{
-			string path = @"C:\Users\LENOVO\Documents\db.txt";
+			string path = @"C:\codeTitansBank\db.txt";
 
 			string username;
 			string password;
