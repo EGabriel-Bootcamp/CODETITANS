@@ -106,6 +106,14 @@ namespace CodeTitansBank
 			} while (keepGoing);
 		}
 
+        public static void Logout()
+		{
+			var username = SignUpLogin.userName;
+
+			Console.WriteLine("Goodbye " + username + "Thanks For Banking With us");
+			Console.ReadKey();
+		}
+
 	}
 
 }
