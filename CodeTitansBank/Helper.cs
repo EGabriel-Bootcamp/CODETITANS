@@ -158,7 +158,7 @@ namespace CodeTitansBank
 			}
 			else if(answer == 4)
 			{
-				SignUpLogin.Logout();
+				SignUpLogin.Logout(account);
 			}
 
 			return answer;
