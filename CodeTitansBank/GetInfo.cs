@@ -143,7 +143,7 @@ namespace CodeTitansBank
 			string amount = Console.ReadLine();
 			bool isDigit = decimal.TryParse(amount, out decimal amountDecimal);
 
-			while (!isDigit)
+			while (!isDigit || amountDecimal <= 0)
 			{
 				Console.WriteLine("Please enter a valid amount");
 				amount = Console.ReadLine();

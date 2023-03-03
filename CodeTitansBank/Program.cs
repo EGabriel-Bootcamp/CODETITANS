@@ -1,6 +1,6 @@
 ﻿using CodeTitansBank;
 
-string path = @"C:\Users\LENOVO\Documents\db.txt";
+string path = @"C:\codeTitansBank\db.txt";
 
 
 Helper.Welcome();
