@@ -1,7 +1,13 @@
 # CODETITANS
-THIS IS THE REPOSITORY FOR GROUP CODE TITANS
+## Console Bank Project
+
+This is a console app that has 6 features.
+* Sign Up
+* Login
+* Deposit
+* Withdrawal
+* View Balance
+* Account Summary
 
 ## Authors
 Maureen Oguche
-Samuel Akinwole
-IbukunOluwa

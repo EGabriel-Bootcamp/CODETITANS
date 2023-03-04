@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using static System.TimeZoneInfo;
 
 namespace CodeTitansBank
 {
@@ -82,12 +84,13 @@ namespace CodeTitansBank
 			Console.Write("2 \t Make Deposit");
 			Console.WriteLine();
 			Console.Write("3 \t Make Withdrawal");
-			Console.WriteLine();
-			Console.Write("0 \t Exit");
-			Console.WriteLine("\n");
+            Console.WriteLine();
+            Console.Write("4 \t Logout");
+            Console.WriteLine("\n");
 
 			do
 			{
+				
 				enteredtext = Console.ReadLine();
 
 				while (enteredtext == null)
@@ -102,9 +105,9 @@ namespace CodeTitansBank
 				{
 					Console.WriteLine("Please enter a valid number");
 				}
-				else if (answer != 1 && answer != 2 && answer != 3 && answer != 0)
+				else if (answer != 1 && answer != 2 && answer != 3 && answer != 4)
 				{
-					Console.WriteLine("Please enter 0 or 1 or 2 or 3");
+					Console.WriteLine("Please enter 1 or 2 or 3 or 4");
 					isDigit = false;
 				}
 
@@ -124,25 +127,38 @@ namespace CodeTitansBank
 			{
 				decimal amount = GetInfo.GetDepositAmount();
 				decimal balance = account.Deposit(amount);
+				DateTime transactionTime = DateTime.UtcNow;
 
-				Console.WriteLine($"\nYou have successfully deposited {amount}");
+
+                Console.WriteLine($"\nYou have successfully deposited {amount}");
 				Console.WriteLine($"Your new balance is {balance}\n");
 
-				Helper.WhatToDoLogged(account);
+				Console.ReadKey();
+
+
+                Console.WriteLine("======= Transaction Summary ===========\n");
+                Console.WriteLine("Transaction Date =====> {0} \t Amount Deposited =========> {1} \t Balance =======> {2}\n", transactionTime, amount, balance);
+
+                Helper.WhatToDoLogged(account);
 			}
 			else if (answer == 3)
 			{
 				decimal amount = GetInfo.GetWithdrawalAmount();
 				decimal balance = account.Withdraw(amount);
+                DateTime transactionTime = DateTime.UtcNow;
 
-				Console.WriteLine($"\nYou have successfully withdrawn {amount}");
+                Console.WriteLine($"\nYou have successfully withdrawn {amount}");
 				Console.WriteLine($"Your new balance is {balance}\n");
 
-				Helper.WhatToDoLogged(account);
+
+                Console.WriteLine("======= Transaction Summary ===========\n");
+                Console.WriteLine("Transaction Date =====> {0} \t Amount Withdrawn =========> {1} \t Balance =======> {2} \n", transactionTime, amount, balance);
+
+                Helper.WhatToDoLogged(account);
 			}
-			else
+			else if(answer == 4)
 			{
-				Environment.Exit(0);
+				SignUpLogin.Logout(account);
 			}
 
 			return answer;

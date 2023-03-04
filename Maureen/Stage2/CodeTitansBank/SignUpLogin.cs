@@ -42,7 +42,7 @@ namespace CodeTitansBank
 
 		public static void Login()
 		{
-			string path = @"C:\codeTitansBank\db.txt";
+			string path = @"C:\Users\LENOVO\Documents\db.txt";
 
 			string username;
 			string password;
@@ -104,6 +104,14 @@ namespace CodeTitansBank
 				Console.WriteLine("Invalid User, Try again: ");
 
 			} while (keepGoing);
+		}
+
+        public static void Logout(Bank account)
+		{
+			var username = account.UserName;
+
+			Console.WriteLine($"Goodbye {username} Thanks For Banking With us");
+			Console.ReadKey();
 		}
 
 	}
