@@ -20,9 +20,9 @@ namespace Jolib.Controllers
         }
 
         [HttpGet("GetAllPublishers")]
-        public async Task<IActionResult> GetAllPublishers()
+        public IActionResult GetAllPublishers()
         {
-            var res = await _repo.GetAllPublisher();
+            var res =  _repo.GetAllPublisher();
             if (res.Code.Equals("00"))
             {
                 return Ok(res);
@@ -31,11 +31,11 @@ namespace Jolib.Controllers
         }
 
         [HttpGet("GetPublisher")]
-        public async Task<IActionResult> GetPublisher(int id)
+        public IActionResult GetPublisher(int id)
         {
             if(id == 0)
                return BadRequest(id);
-            var res = await _repo.GetPublisher(id);
+            var res =  _repo.GetPublisher(id);
             if (res.Code.Equals("00"))
             {
                 return Ok(res);
@@ -43,11 +43,11 @@ namespace Jolib.Controllers
             return BadRequest(res);
         }
         [HttpGet("GetAuthorsAttachedToAPublisher")]
-        public async Task<IActionResult> GetAuthorsAttachedToAPublisher(int id)
+        public IActionResult GetAuthorsAttachedToAPublisher(int id)
         {
             if (id == 0)
                 return BadRequest(id);
-            var res = await _repo.GetAuthorsAttachedToAPublisher(id);
+            var res =  _repo.GetAuthorsAttachedToAPublisher(id);
             if (res.Code.Equals("00"))
             {
                 return Ok(res);

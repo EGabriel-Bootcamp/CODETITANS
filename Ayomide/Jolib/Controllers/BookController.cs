@@ -17,9 +17,9 @@ namespace Jolib.Controllers
          
         }
         [HttpGet("GetAllBooks")]
-        public async Task<IActionResult> GetAllBooks()
+        public IActionResult GetAllBooks()
         {
-            var res = await _repo.GetAllBooks();
+            var res =  _repo.GetAllBooks();
             if (res.Code.Equals("00"))
             {
                 return Ok(res);
@@ -28,11 +28,11 @@ namespace Jolib.Controllers
         }
 
         [HttpGet("GetBook")]
-        public async Task<IActionResult> GetBook(int id)
+        public IActionResult GetBook(int id)
         {
             if (id == 0)
                 return BadRequest(id);
-            var res = await _repo.GetBook(id);
+            var res =  _repo.GetBook(id);
             if (res.Code.Equals("00"))
             {
                 return Ok(res);
@@ -40,11 +40,11 @@ namespace Jolib.Controllers
             return BadRequest(res);
         }
         [HttpGet("GetAuthorsAttachedToBook")]
-        public async Task<IActionResult> GetAuthorsAttachedToBook(int id)
+        public IActionResult GetAuthorsAttachedToBook(int id)
         {
             if (id == 0)
                 return BadRequest(id);
-            var res = await _repo.GetAuthorsAttachedToBook(id);
+            var res =  _repo.GetAuthorsAttachedToBook(id);
             if (res.Code.Equals("00"))
             {
                 return Ok(res);

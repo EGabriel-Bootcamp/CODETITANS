@@ -10,8 +10,9 @@ namespace Jolib.Entities
         public string FirstName { get; set; } = string.Empty;
         [Required]
         public string LastName { get; set; } = string.Empty;
-        public Publisher Publisher { get; set; } = new Publisher();
+        public Publisher? Publisher { get; set; }
        
         public ICollection<Book> Books { get; set; } = new List<Book>();
+       
     }
 }

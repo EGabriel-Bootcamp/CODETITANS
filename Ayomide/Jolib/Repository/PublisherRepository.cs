@@ -13,9 +13,14 @@ namespace Jolib.Repository
         {
             _context = context;
         }
-        public async Task<ApiResponse> GetAllPublisher()
+        private List<Publisher> GetPublishers()
         {
-            var publishers = await _context.Publisher.ToListAsync();
+            return _context.Publisher.Include((b) => b.Authors).ToList();
+
+        }
+        public ApiResponse GetAllPublisher()
+        {
+            var publishers = GetPublishers();
             if (publishers == null)
             {
                 return new ApiResponse() { Code = "25", Description = "No publisher record found", Data = null };
@@ -23,9 +28,9 @@ namespace Jolib.Repository
             return new ApiResponse() { Code = "00", Description = "Success", Data = publishers };
         }
 
-        public async Task<ApiResponse> GetPublisher(int id)
+        public ApiResponse GetPublisher(int id)
         {
-            var publisher = await _context.Publisher.FirstOrDefaultAsync(x => x.ID == id);
+            var publisher = GetPublishers().FirstOrDefault(x => x.ID == id);
             if (publisher == null)
             {
                 return new ApiResponse() { Code = "25", Description = "publisher does not exists", Data = null };
@@ -36,7 +41,7 @@ namespace Jolib.Repository
         }
         public async Task<ApiResponse> CreatePublisher(Publisher publisher)
         {
-            var userExists =  _context.Publisher.Where((p) => (p.FirstName + p.LastName).ToLower() == (publisher.FirstName + publisher.LastName).ToLower()).Any();
+            var userExists = GetPublishers().Where((p) => (p.FirstName + p.LastName).ToLower() == (publisher.FirstName + publisher.LastName).ToLower()).Any();
 
             if (userExists)
                 return new ApiResponse() { Code = "25", Description = "Publisher Exists", Data = null };
@@ -47,9 +52,9 @@ namespace Jolib.Repository
 
 
         }
-        public async Task<ApiResponse> GetAuthorsAttachedToAPublisher(int id)
+        public ApiResponse GetAuthorsAttachedToAPublisher(int id)
         {
-            var publisher = await _context.Publisher.FirstOrDefaultAsync(x => x.ID == id);
+            var publisher = GetPublishers().FirstOrDefault(x => x.ID == id);
 
             if (publisher == null)
                 return new ApiResponse() { Code = "25", Description = "Publisher Does Not Exists", Data = null };

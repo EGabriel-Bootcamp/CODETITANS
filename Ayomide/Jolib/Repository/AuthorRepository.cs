@@ -15,9 +15,14 @@ namespace Jolib.Repository
         {
             _context = context;
         }
-        public async Task<ApiResponse> GetAllAuthors()
+        private List<Author> GetAuthors()
         {
-            var authors = await _context.Author.ToListAsync();
+            return _context.Author.Include((b) => b.Books).Include((b) => b.Publisher).IgnoreAutoIncludes() .ToList();
+        }
+
+            public ApiResponse GetAllAuthors()
+        {
+            var authors = GetAuthors();
             if (authors == null)
             {
                 return new ApiResponse() { Code = "25", Description = "No authors record found", Data = null };
@@ -25,9 +30,9 @@ namespace Jolib.Repository
             return new ApiResponse() { Code = "00", Description = "Success", Data = authors };
         }
 
-        public async Task<ApiResponse> GetAuthor(int id)
+        public ApiResponse GetAuthor(int id)
         {
-            var author = await _context.Author.FirstOrDefaultAsync(x => x.ID == id);
+            var author = GetAuthors().FirstOrDefault(x => x.ID == id);
             if (author == null)
             {
                 return new ApiResponse() { Code = "25", Description = "author record not found", Data = null };
@@ -35,9 +40,9 @@ namespace Jolib.Repository
             return new ApiResponse() { Code = "00", Description = "Success", Data = author };
 
         }
-        public async Task<ApiResponse> GetBooksAttachedToAuthor(int id)
+        public ApiResponse GetBooksAttachedToAuthor(int id)
         {
-            var author = await _context.Author.FirstOrDefaultAsync(x => x.ID == id);
+            var author = GetAuthors().FirstOrDefault(x => x.ID == id);
 
             if (author == null)
                 return new ApiResponse() { Code = "25", Description = "Author Does Not Exists", Data = null };
@@ -50,11 +55,11 @@ namespace Jolib.Repository
         public async Task<ApiResponse> CreateAuthor(AuthorDto author)
         {
 
-            var userExists = _context.Author.Where((p) => (p.FirstName + p.LastName).ToLower() == (author.FirstName + author.LastName).ToLower()).Any();
+            var userExists = GetAuthors().Where((p) => (p.FirstName + p.LastName).ToLower() == (author.FirstName + author.LastName).ToLower()).Any();
 
             if (userExists)
                 return new ApiResponse() { Code = "25", Description = "Author Exists", Data = null };
-            var publisher =await  _context.Publisher.FirstOrDefaultAsync(x => x.ID == author.PublisherId);
+            var publisher = await  _context.Publisher.Include((a)=> a.Authors).FirstOrDefaultAsync(x => x.ID == author.PublisherId);
             if(publisher == null)
                 return new ApiResponse() { Code = "25", Description = "Publisher does not Exists", Data = null };
 
@@ -70,7 +75,7 @@ namespace Jolib.Repository
 
             await _context.Author.AddAsync(newAuthor);
             await _context.SaveChangesAsync();
-            return new ApiResponse() { Code = "00", Description = "Success", Data = author };
+            return new ApiResponse() { Code = "00", Description = "Success", Data = newAuthor };
 
 
         }
