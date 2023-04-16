@@ -32,7 +32,7 @@ namespace Mauser.Controllers
         [HttpGet("GetUser")]
         public async Task<ActionResult> GetUser(int Id)
         {
-            if (Id == 0)
+            if (Id <=  0)
                 return BadRequest(Id);
             var res = await _service.GetUser(Id);
             if (res.Code.Equals("00"))
@@ -55,9 +55,12 @@ namespace Mauser.Controllers
         }
 
         [HttpPost("EditUser")]
-        public async Task<ActionResult> UpdateUser([FromBody]UserDto dto)
+        public async Task<ActionResult> UpdateUser([FromBody]UserDto dto, int userId)
         {
+            if(userId <= 0 || !ModelState.IsValid)
+                return BadRequest();
             var user = _mapper.Map<User>(dto);
+            user.Id= userId;
             var res = await _service.UpdateUser(user);
             if (res.Code.Equals("00"))
             {
@@ -67,10 +70,11 @@ namespace Mauser.Controllers
         }
 
         [HttpDelete("DeleteUser")]
-        public async Task<ActionResult> DeleteUser([FromBody] List<int> userIds)
+        public async Task<ActionResult> DeleteUser([FromBody]List<int> userIds)
         {
-          
-            var res = await _service.DeleteUsers(userIds);
+            if (!userIds.Any() || !ModelState.IsValid)
+                return BadRequest();
+                var res = await _service.DeleteUsers(userIds);
             if (res.Code.Equals("00"))
             {
                 return Ok(res);
