@@ -29,7 +29,8 @@ namespace Jolib.Controllers
         [HttpGet("GetAuthor")]
         public IActionResult GetAuthor(int id)
         {
-           
+            if (id == 0)
+                return BadRequest(id);
             var res = _repo.GetAuthor(id);
             if (res.Code.Equals("00"))
             {

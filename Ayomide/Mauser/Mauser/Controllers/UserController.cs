@@ -69,6 +69,19 @@ namespace Mauser.Controllers
             return BadRequest(res);
         }
 
+        [HttpGet("Search")]
+        public async Task<ActionResult> Search(string search)
+        {
+          
+            var res = await _service.SearchUser(search);
+            if (res.Code.Equals("00"))
+            {
+                return Ok(res);
+            }
+            return BadRequest(res);
+        }
+
+
         [HttpDelete("DeleteUser")]
         public async Task<ActionResult> DeleteUser([FromBody]List<int> userIds)
         {

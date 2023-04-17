@@ -12,7 +12,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>((options => {
-    options.EnableSensitiveDataLogging();
+var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+    if (env == "Development")
+    {
+        options.EnableSensitiveDataLogging();
+    }
     options.UseNpgsql("name=Default");
 }));
 
