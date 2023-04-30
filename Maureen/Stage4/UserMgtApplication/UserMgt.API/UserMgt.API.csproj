@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Persistence\Persistence.csproj" />
     <ProjectReference Include="..\UserMgt.Application\UserMgt.Application.csproj" />
+    <ProjectReference Include="..\UserMgt.Identity\UserMgt.Identity.csproj" />
   </ItemGroup>
 
 </Project>

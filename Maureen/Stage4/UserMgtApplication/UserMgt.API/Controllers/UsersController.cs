@@ -28,6 +28,7 @@ namespace UserMgt.API.Controllers
 
 
         // GET: api/<ValuesController>
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet]
         public async Task<ActionResult<APIResponse>> Get()
         {
@@ -37,6 +38,9 @@ namespace UserMgt.API.Controllers
         }
 
         // GET api/<ValuesController>/5
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpGet("{id}")]
         public async Task<ActionResult<APIResponse>> Get(int id)
         {
@@ -47,6 +51,8 @@ namespace UserMgt.API.Controllers
         }
 
         // POST api/<ValuesController>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPost]
         public async Task<ActionResult<APIResponse>> Post(CreateUserCommand createUser)
         {
@@ -55,6 +61,9 @@ namespace UserMgt.API.Controllers
         }
 
         // PUT api/<ValuesController>/5
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPut]
         public async Task<ActionResult<APIResponse>> Put(EditUserCommand editUsercommand)
         {
@@ -63,6 +72,9 @@ namespace UserMgt.API.Controllers
         }
 
         // DELETE api/<ValuesController>/5
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpDelete("{id}")]
         public async Task<ActionResult<APIResponse>> Delete(int id)
         {
@@ -72,6 +84,8 @@ namespace UserMgt.API.Controllers
             return _response;
         }
 
+        // Filter users
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("searchUser")]
         public async Task<ActionResult<APIResponse>> Filter(string searchText)
         {
