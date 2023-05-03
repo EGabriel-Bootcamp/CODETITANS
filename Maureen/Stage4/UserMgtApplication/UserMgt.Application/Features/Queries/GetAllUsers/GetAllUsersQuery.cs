@@ -8,7 +8,6 @@ using UserMgt.Application.Features.Models;
 
 namespace UserMgt.Application.Features.Queries.GetAllUsers
 {
-    public class GetAllUsersQuery : IRequest<APIResponse>
-    {
-    }
+    public record GetAllUsersQuery(string? SearchText) : IRequest<APIResponse>;
+
 }

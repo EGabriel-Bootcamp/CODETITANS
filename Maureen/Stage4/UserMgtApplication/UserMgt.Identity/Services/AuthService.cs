@@ -69,7 +69,8 @@ namespace UserMgt.Identity.Services
                 Id = user.Id,
                 Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
                 Email = user.Email,
-                UserName = user.UserName
+                UserName = user.UserName,
+                Claims = jwtSecurityToken.Claims,
             };
 
             jwtResponse = new()
@@ -97,7 +98,10 @@ namespace UserMgt.Identity.Services
 
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, UserRoles.General);
+                if (request.Role == "Admin")
+                    await _userManager.AddToRoleAsync(user, UserRoles.Admin);
+                else
+                    await _userManager.AddToRoleAsync(user, UserRoles.General);
 
                 jwtResponse = new()
                 {

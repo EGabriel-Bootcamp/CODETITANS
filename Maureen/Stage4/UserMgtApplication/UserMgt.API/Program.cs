@@ -10,6 +10,12 @@ builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddApplicationServices();
 builder.Services.AddIdentityService(builder.Configuration);
 
+//Caching
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = "localhost:6379";
+});
+
 builder.Services.AddControllers();
 
 builder.Services.AddCors(options =>

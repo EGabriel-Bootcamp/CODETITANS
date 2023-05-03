@@ -1,18 +1,20 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using System.Net;
 using UserMgt.Application.Features.Commands.CreateUser;
 using UserMgt.Application.Features.Commands.DeleteUser;
 using UserMgt.Application.Features.Commands.EditUser;
 using UserMgt.Application.Features.Models;
-using UserMgt.Application.Features.Queries.FilterUsers;
 using UserMgt.Application.Features.Queries.GetAllUsers;
 using UserMgt.Application.Features.Queries.GetOneUser;
+using UserMgt.Application.Models.Identity;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace UserMgt.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -29,11 +31,15 @@ namespace UserMgt.API.Controllers
 
         // GET: api/<ValuesController>
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpGet]
-        public async Task<ActionResult<APIResponse>> Get()
+        public async Task<ActionResult<APIResponse>> GetUsers([FromQuery] string? searcText)
         {
-            _response = await _mediator.Send(new GetAllUsersQuery());
-            
+            _response = await _mediator.Send(new GetAllUsersQuery(searcText));
+
+            if (!User.IsInRole(UserRoles.General) || !User.IsInRole(UserRoles.Admin))
+                return Unauthorized(_response);
+
             return Ok(_response);
         }
 
@@ -47,6 +53,8 @@ namespace UserMgt.API.Controllers
             var command = new GetOneUserQuery();
             command.Id = id;
             _response = await _mediator.Send(command);
+
+
             return _response;
         }
 
@@ -54,8 +62,12 @@ namespace UserMgt.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPost]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<ActionResult<APIResponse>> Post(CreateUserCommand createUser)
         {
+            if (!User.IsInRole(UserRoles.Admin))
+                return Unauthorized();
+
             _response = await _mediator.Send(createUser);
             return (_response);
         }
@@ -76,6 +88,7 @@ namespace UserMgt.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpDelete("{id}")]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<ActionResult<APIResponse>> Delete(int id)
         {
             var command = new DeleteUserCommand();
@@ -84,16 +97,5 @@ namespace UserMgt.API.Controllers
             return _response;
         }
 
-        // Filter users
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("searchUser")]
-        public async Task<ActionResult<APIResponse>> Filter(string searchText)
-        {
-            var command = new FilterUsersQuery();
-            command.SearchText = searchText;
-
-            _response = await _mediator.Send(command);
-            return _response;
-        }
     }
 }
