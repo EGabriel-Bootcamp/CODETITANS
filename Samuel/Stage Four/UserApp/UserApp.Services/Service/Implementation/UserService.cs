@@ -75,6 +75,7 @@ namespace UserApp.Services.Service.Implementation
             return users.Where(e => e.FirstName.ToLower().Contains(lowerCaseTerm)
                                 || e.LastName.ToLower().Contains(lowerCaseTerm)
                                 || e.Age.ToLower().Contains(lowerCaseTerm)
+                                || e.Gender.ToLower().Contains(lowerCaseTerm)
                                 || e.MaritalStatus.ToLower().Contains(lowerCaseTerm)).ToList();
 
         }
