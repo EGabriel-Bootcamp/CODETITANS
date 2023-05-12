@@ -1,13 +1,18 @@
 ﻿using AutoMapper;
 using Domain.Dtos;
 using Domain.Entities;
+using Domain.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.UserServices;
 
 namespace Mauser.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : Controller
     {
         private readonly IUserService _service;
@@ -18,6 +23,7 @@ namespace Mauser.Controllers
             _mapper= mapper;    
         }
 
+       
         [HttpGet("GetUsers")]
         public async Task<ActionResult> GetUsers()
         {
@@ -45,6 +51,8 @@ namespace Mauser.Controllers
         [HttpPost("CreateUser")]
         public async Task<ActionResult> CreateUser([FromBody]UserDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest();
             var user = _mapper.Map<User>(dto);
             var res = await _service.CreateUser(user);
             if (res.Code.Equals("00"))

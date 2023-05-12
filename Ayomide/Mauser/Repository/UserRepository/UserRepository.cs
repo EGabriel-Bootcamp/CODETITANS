@@ -6,14 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository
+namespace Repository.UserRepository
 {
     public class UserRepository : IUserRepository
     {
         private readonly DataContext _context;
         public UserRepository(DataContext context)
         {
-                _context= context;
+            _context = context;
         }
 
         public async Task<bool> CreateUserAsync(User user)
@@ -30,14 +30,15 @@ namespace Repository
             foreach (var user in users)
             {
                 var userExists = await UserExistAsync(user.Id);
-                if(userExists) {
+                if (userExists)
+                {
 
                     _context.User.Remove(user);
                     deletedList.Add(user);
                 }
             }
-           
-           
+
+
             await Save();
 
             return deletedList.Any();

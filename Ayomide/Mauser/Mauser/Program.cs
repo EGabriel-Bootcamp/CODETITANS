@@ -1,29 +1,23 @@
 using Mauser;
+using Mauser.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using Repository;
+using Services;
 using Services.UserServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<DataContext>((options => {
-var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-    if (env == "Development")
-    {
-        options.EnableSensitiveDataLogging();
-    }
-    options.UseNpgsql("name=Default");
-}));
+builder.Services.AddMauserService();
+builder.Services.ConfigureJWT(builder.Configuration);
+builder.Services.AddAuthorization();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddControllers();
+builder.Services.ConfigureSwagger();
 
-builder.Services.AddScoped<IUserService, UserService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -34,7 +28,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

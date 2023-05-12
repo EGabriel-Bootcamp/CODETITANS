@@ -1,6 +1,8 @@
 ﻿using Domain.Dtos;
 using Domain.Entities;
-using Repository;
+using Microsoft.Extensions.Caching.Distributed;
+using Repository.UserRepository;
+using Services.CacheRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +11,12 @@ using System.Threading.Tasks;
 
 namespace Services.UserServices
 {
-    public class UserService : IUserService
+    public class UserService : CacheRepository<List<User>>,  IUserService
     {
         private readonly IUserRepository _repo;
-        public UserService(IUserRepository repo)
+        private readonly string cacheKey = "userredis";
+
+        public UserService(IUserRepository repo,  IDistributedCache distributedCache) : base(distributedCache)
         {
             _repo = repo;
         }
@@ -20,6 +24,11 @@ namespace Services.UserServices
         public async Task<ApiResponse> CreateUser(User user)
         {
             var newUser = await _repo.CreateUserAsync(user);
+            if(!newUser)
+                return new ApiResponse() { Code = "25", Description = "Error creating user", Data = newUser };
+
+
+            await Delete(cacheKey);
             return new ApiResponse() { Code = "00", Description = "Success", Data = newUser };
         }
 
@@ -38,13 +47,16 @@ namespace Services.UserServices
 
 
           await _repo.DeleteUsersAsync(userExistsList);
-
+            await Delete(cacheKey);
             return new ApiResponse() { Code = "00", Description = "Success", Data = null };
 
         }
 
         public async Task<ApiResponse> GetUser(int Id)
         {
+          
+
+
             var user = await _repo.GetUserByIdAsync(Id);
             if (user == null) return new ApiResponse() { Code = "25", Description = "User not found", Data = null };
 
@@ -54,15 +66,31 @@ namespace Services.UserServices
 
         public async Task<ApiResponse> GetUsers()
         {
-          var users = await _repo.GetUsersAsync();
+            List<User>? users;
+
+            users = await Get(cacheKey);
+            if(users == null) {
+                users = await _repo.GetUsersAsync();
+                await Save(cacheKey, users);
+            }
+                
+
           return new ApiResponse() { Code = "00", Description = "Success", Data = users };
 
         }
 
         public async Task<ApiResponse> SearchUser(string searchKey)
         {
-          
-            var users = await _repo.GetUsersAsync();
+
+            List<User>? users;
+
+            users = await Get(cacheKey);
+            if (users == null)
+            {
+                users = await _repo.GetUsersAsync();
+                await Save(cacheKey, users);
+            }
+
             var searchResult  = new List<User>();
             if (string.IsNullOrWhiteSpace(searchKey))
             {
@@ -97,6 +125,7 @@ namespace Services.UserServices
             existingUser.MaritalStatus = user.MaritalStatus;
             await _repo.UpdateUserAsync(existingUser);
 
+            await Delete(cacheKey);
             return new ApiResponse() { Code = "00", Description = "Success", Data = user };
 
         }

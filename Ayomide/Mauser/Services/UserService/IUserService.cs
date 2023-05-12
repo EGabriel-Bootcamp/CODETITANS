@@ -1,14 +1,10 @@
 ﻿using Domain.Dtos;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Services.CacheRepository;
 
 namespace Services.UserServices
 {
-    public interface IUserService
+    public interface IUserService : ICacheRepository<List<User>>
     {
         Task<ApiResponse> GetUsers();
         Task<ApiResponse> GetUser(int Id);
